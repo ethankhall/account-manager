@@ -20,6 +20,7 @@ like book, or machine. Finally, `action` is the name of an operation that can be
 then it's internal to the service, and is part of a reserved namespace.
 
 Some examples of the triples are:
+
 |`subject`|`resource`|`action`|
 | --------------------- |:---------------------:| ---------------------:|
 | local-library | book | checkout |
