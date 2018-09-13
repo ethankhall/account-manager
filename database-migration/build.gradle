@@ -1,0 +1,21 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+apply plugin: 'java'
+apply plugin: 'io.ehdev.gradle.development'
+apply plugin: 'org.flywaydb.flyway'
+
+flyway {
+    driver = database.driver
+    url = database.url
+    outOfOrder = true
+    user = database.user
+    password = database.password
+    table = 'flyway_schema_history'
+}
+
+dependencies {
+    compile libraries.database
+    compile libraries.kotlin
+}

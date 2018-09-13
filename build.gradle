@@ -1,0 +1,107 @@
+plugins {
+    id 'io.ehdev.gradle.dependency-resolve' version 'LATEST' apply false
+    id 'io.ehdev.gradle.build-dir' version 'LATEST' apply false
+    id 'io.ehdev.gradle.klint' version 'LATEST' apply false
+    id "org.flywaydb.flyway" version "5.1.4" apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.2.51' apply false
+    id "org.jetbrains.kotlin.kapt" version "1.2.51" apply false
+}
+
+apply from: "gradle/database.gradle"
+
+allprojects {
+    group 'io.ehdev'
+    version '1.0-SNAPSHOT'
+
+    apply plugin: 'io.ehdev.gradle.build-dir'
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    sourceCompatibility = '1.10'
+
+    dependencies {
+        modules {
+            module("org.hibernate:hibernate-validator") {
+                replacedBy("org.hibernate.validator:hibernate-validator",
+                        "org.hibernate is now part of org.hibernate.validator")
+            }
+        }
+
+        testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+    }
+}
+
+def springVersion = '4.3.8.RELEASE'
+
+ext['libraries'] = [
+        "kotlin"          : [
+                "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.51",
+                "org.jetbrains.kotlin:kotlin-stdlib:1.2.51",
+                "org.jetbrains.kotlin:kotlin-reflect:1.2.51"
+        ],
+        "logging"         : [
+                "org.slf4j:slf4j-api:1.7.25"
+        ],
+        "dagger"          : [
+                'com.google.dagger:dagger:2.16'
+        ],
+        'daggerCompiler'  : [
+                'com.google.dagger:dagger-compiler:2.16'
+        ],
+        "dropwizard"      : [
+                "io.dropwizard.metrics:metrics-core:3.1.2",
+                'io.dropwizard:dropwizard-core:1.3.5',
+                'io.dropwizard:dropwizard-auth:1.3.5',
+                'io.dropwizard:dropwizard-jdbi:1.3.5',
+                'io.dropwizard.modules:dropwizard-flyway:1.3.0-4',
+                'io.dropwizard:dropwizard-views-freemarker:1.3.5',
+                'org.hibernate:hibernate-validator:5.4.2.Final'
+        ],
+        "database"        : [
+                "mysql:mysql-connector-java:8.0.11",
+                "com.zaxxer:HikariCP:2.4.1",
+                "org.jooq:jooq:3.11.3",
+                "org.jooq:jooq-meta:3.11.3",
+                "org.flywaydb:flyway-core:4.1.2"
+        ],
+        'commonsLang'     : [
+                'org.apache.commons:commons-lang3:3.7'
+        ],
+        "jackson"         : [
+                "com.fasterxml.jackson.core:jackson-annotations:2.8.8",
+                "com.fasterxml.jackson.core:jackson-databind:2.8.8",
+                "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.8",
+                "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7"
+        ],
+        "servletCore"     : [
+                "javax.servlet:javax.servlet-api:3.1.0",
+                "org.glassfish.web:javax.el:2.2.6"
+        ],
+        'jwt'             : [
+                'io.jsonwebtoken:jjwt:0.6.0'
+        ],
+        "jooqCodeGen"     : [
+                "org.jooq:jooq:3.11.3",
+                "org.jooq:jooq-meta:3.11.3",
+                "org.jooq:jooq-codegen:3.11.3",
+                "mysql:mysql-connector-java:8.0.11"
+        ],
+        "testingLibraries": [
+                "org.mockito:mockito-core:1.10.19",
+                "com.jayway.jsonpath:json-path:2.2.0",
+                "cglib:cglib:3.2.5",
+                "org.objenesis:objenesis:2.2",
+                "org.ow2.asm:asm:5.0.4",
+                "de.sven-jacobs:loremipsum:1.0",
+                "org.jetbrains.kotlin:kotlin-test-junit5:1.2.51",
+                'io.dropwizard:dropwizard-testing:1.3.5',
+        ],
+]

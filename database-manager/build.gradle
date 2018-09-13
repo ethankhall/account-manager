@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'io.ehdev.gradle.development'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+dependencies {
+    compile project(":database-jooq")
+    compile project(":models")
+    compile libraries.kotlin
+    compile libraries.logging
+    compile libraries.database
+    compile libraries.dagger
+    compile libraries.commonsLang
+    compile 'javax.annotation:javax.annotation-api:1.2'
+    compile 'org.springframework:spring-webflux:5.0.8.RELEASE'
+
+    testCompile libraries.testingLibraries
+}
+
+integTest.dependsOn ':database-migration:flywayMigrate'
+
+task prepareConfig(type: Copy) {
+    from "$rootDir/test-config"
+    into sourceSets.integTest.output.resourcesDir
+    outputs.upToDateWhen { false }
+    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            'URL' : database.url,
+            'USER_NAME'  : database.user,
+            'PASSWORD': database.password,
+            'DB'   : database.name
+    ])
+}
+
+tasks.integTestClasses.dependsOn(prepareConfig)
+
+
+kapt {
+    generateStubs = true
+}

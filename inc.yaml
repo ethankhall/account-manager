@@ -1,0 +1,9 @@
+exec:
+  ci:
+    commands:
+      - ./gradlew assemble
+      - ./gradlew test
+
+  build:
+    commands: ./gradlew build
+    description: Run a normal build

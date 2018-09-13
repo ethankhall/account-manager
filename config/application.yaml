@@ -1,0 +1,25 @@
+authentication:
+  jwtSignature: letmein2 # Change ME!
+  fixedAuthToken: LK2CvWAqp0klaTuC9YgSz6KWGykcKJEps2kdu3jfdo1kj4idm3i # Change ME!
+  oauthCreds:
+  - clientName: GITHUB
+    clientId: <id>
+    clientSecret: <secret>
+  - clientName: GOOGLE
+    clientId: <id>
+    clientSecret: <secret>
+  serviceBaseUrl: http://localhost:8080
+  cookieDomain: localhost
+
+authorization:
+  allowedEmailRegex:
+    - .*
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/account_manager?verifyServerCertificate=false&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: password
+  flyway.table: flyway_schema_history

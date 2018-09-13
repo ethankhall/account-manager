@@ -1,0 +1,67 @@
+POST http://localhost:8080/api/v1/authorization
+Accept: application/json
+Content-Type: application/json
+X-AUTH-TOKEN: {{auth-token}}
+
+{
+  "subjectName": "my-test"
+}
+
+###
+
+GET http://localhost:8080/api/v1/authorization/my-test
+Accept: application/json
+Content-Type: application/json
+X-AUTH-TOKEN: {{auth-token}}
+
+###
+
+POST http://localhost:8080/api/v1/authorization/my-test/permission
+Accept: application/json
+Content-Type: application/json
+X-AUTH-TOKEN: {{auth-token}}
+
+{
+  "resource": "home",
+  "action": "unlock",
+  "defaultUsers": [
+    "ethan@ehdev.io"
+  ]
+}
+
+###
+
+GET http://localhost:8080/api/v1/authorization/my-test
+Accept: application/json
+Content-Type: application/json
+X-AUTH-TOKEN: {{auth-token}}
+
+###
+
+GET http://localhost:8080/api/v1/authorization/my-test/permission/home/unlock
+Accept: application/json
+Content-Type: application/json
+X-AUTH-TOKEN: {{auth-token}}
+
+###
+
+DELETE http://localhost:8080/api/v1/authorization/my-test/permission/home/unlock
+Accept: application/json
+Content-Type: application/json
+X-AUTH-TOKEN: {{auth-token}}
+
+###
+
+DELETE http://localhost:8080/api/v1/authorization/my-test/permission/home/unlock/user/ethan@ehdev.io
+Accept: application/json
+Content-Type: application/json
+X-AUTH-TOKEN: {{auth-token}}
+
+###
+
+DELETE http://localhost:8080/api/v1/authorization/my-test
+Accept: application/json
+Content-Type: application/json
+X-AUTH-TOKEN: {{auth-token}}
+
+###

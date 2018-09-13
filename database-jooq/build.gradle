@@ -1,0 +1,46 @@
+apply plugin: 'java'
+apply plugin: 'io.ehdev.gradle.development'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/generated-java'
+        }
+    }
+}
+
+configurations {
+    jooq
+}
+
+dependencies {
+    jooq libraries.jooqCodeGen
+    jooq 'com.sun.xml.bind:jaxb-impl:2.2.11'
+    jooq 'com.sun.xml.bind:jaxb-core:2.2.11'
+    jooq group: 'javax.activation', name: 'activation', version: '1.1.1'
+
+    compile libraries.database
+    compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+}
+
+task prepairJooqConfig(type: Copy) {
+    from "$projectDir/src/config/library.xml"
+    into "$buildDir/jooq"
+    outputs.upToDateWhen { false }
+    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            'JDBC_URL' : database.url.replace("&", '&amp;'),
+            'DB_USER'  : database.user,
+            'DB_PASSWD': database.password,
+            'SCHEMA'   : database.name,
+            'DEST'     : "$projectDir/src/main/generated-java" as String
+    ])
+}
+
+task generateClassesFromDatabase(type: JavaExec) {
+    dependsOn ':database-migration:flywayMigrate'
+    dependsOn prepairJooqConfig
+    classpath configurations.jooq
+    main =  'org.jooq.codegen.GenerationTool'
+    args "$buildDir/jooq/library.xml"
+}
