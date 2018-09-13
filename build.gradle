@@ -7,11 +7,15 @@ plugins {
     id "org.jetbrains.kotlin.kapt" version "1.2.51" apply false
 }
 
+def versionProperties = new Properties()
+versionProperties.load(new FileInputStream("$rootDir/version.properties"))
+ext['version'] = versionProperties.getProperty("version")
+
 apply from: "gradle/database.gradle"
 
 allprojects {
     group 'io.ehdev'
-    version '1.0-SNAPSHOT'
+    version rootProject.ext.version
 
     apply plugin: 'io.ehdev.gradle.build-dir'
     apply plugin: 'java'
