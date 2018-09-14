@@ -78,7 +78,8 @@ jobs:
       - run: |
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          gcloud docker -- push $(cat ~/account-manager/docker-context/image-name)
+          gcloud auth configure-docker
+          docker push $(cat ~/account-manager/docker-context/image-name)
 
 workflows:
   version: 2
