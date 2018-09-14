@@ -74,12 +74,12 @@ jobs:
           command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
       
       - run: |
-          sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-          sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          sudo gcloud --quiet components update
-          sudo gcloud components install docker-credential-gcr
-          sudo docker-credential-gcr configure-docker
-          sudo gcloud docker -- push $(cat ~/account-manager/docker-context/image-name)
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud --quiet components update
+          gcloud components install docker-credential-gcr
+          docker-credential-gcr configure-docker
+          gcloud docker -- push $(cat ~/account-manager/docker-context/image-name)
 
 workflows:
   version: 2
