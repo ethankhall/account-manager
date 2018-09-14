@@ -91,5 +91,4 @@ workflows:
             - build
           filters:
             tags:
-              filter: 
-                - v.*
+              only: v.*
