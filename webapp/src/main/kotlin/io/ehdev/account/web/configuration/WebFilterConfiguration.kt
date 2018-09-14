@@ -43,8 +43,9 @@ open class WebFilterConfiguration : WebFluxConfigurer {
     }
 
     @Bean
-    open fun freeMarkerConfig(applicationContext: ApplicationContext,
-                              @Value("\${spring.template.path}") templatePath: String?): FreeMarkerConfigurer {
+    open fun freeMarkerConfig(applicationContext: ApplicationContext, env: Environment): FreeMarkerConfigurer {
+
+        val templatePath = env.getProperty("spring.template.path")
         val configurer = FreeMarkerConfigurer()
         configurer.setPreferFileSystemAccess(templatePath != null)
         configurer.setTemplateLoaderPath(templatePath ?: "classpath:/templates/")

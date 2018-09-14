@@ -5,9 +5,9 @@ import io.ehdev.account.getLogger
 import io.ehdev.account.web.auth.jwt.JwtManager
 import io.ehdev.account.web.endpoints.api.internal.OAuthBackendHelper
 import io.ehdev.account.web.filters.HeaderConst.COOKIE_NAME
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
-import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.ResponseStatusException
@@ -48,6 +48,13 @@ class OAuthEndpoints(private val providerMap: Map<String, OAuthBackendHelper>,
     fun callback(request: ServerRequest): Mono<ServerResponse> {
         val provider = request.pathVariable("provider")
         val code = request.queryParam("code")
+        val state = request.queryParam("state")
+
+        if (!state.isPresent || !code.isPresent) {
+            return ServerResponse.badRequest().body(
+                    Mono.just(mapOf("error" to "Unable to get OAuth required components")),
+                    object : ParameterizedTypeReference<Map<String, String>>() {})
+        }
 
         val providerBackend = providerMap[provider.toLowerCase()] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         val callbackUri = request.uriBuilder().replaceQuery(null).build()
@@ -56,11 +63,11 @@ class OAuthEndpoints(private val providerMap: Map<String, OAuthBackendHelper>,
             val redirectTo = it.attributes["redirectUrl"] as String
             val uniqueId = it.attributes["uniqueId"] as String
 
-            if (uniqueId != request.queryParam("state").orElseThrow()) {
+            if (uniqueId != state.get()) {
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "State value not the same")
             }
 
-            val (name, email) = providerBackend.authenticate(code.orElseThrow(), callbackUri, uniqueId)
+            val (name, email) = providerBackend.authenticate(code.get(), callbackUri, uniqueId)
 
             val user = userManager.findUserDetails(email) ?: userManager.createUser(email, name)
             val authToken = jwtManager.createUserToken(user)
