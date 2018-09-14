@@ -54,6 +54,8 @@ jobs:
           paths:
             - docker-context
 
+      - run: ~/release-manager github release-and-bump
+
   deploy:
     working_directory: ~/account-manager # directory where steps will run
     docker:
@@ -76,8 +78,6 @@ jobs:
       - run: |
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          gcloud components install docker-credential-gcr
-          docker-credential-gcr configure-docker
           gcloud docker -- push $(cat ~/account-manager/docker-context/image-name)
 
 workflows:
