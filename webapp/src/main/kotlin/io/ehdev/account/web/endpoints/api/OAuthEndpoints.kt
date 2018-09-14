@@ -14,10 +14,12 @@ import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 import java.net.URI
 
-class OAuthEndpoints(private val providerMap: Map<String, OAuthBackendHelper>,
-                     private val userManager: UserManager,
-                     private val jwtManager: JwtManager,
-                     private val cookieDomain: String) {
+class OAuthEndpoints(
+    private val providerMap: Map<String, OAuthBackendHelper>,
+    private val userManager: UserManager,
+    private val jwtManager: JwtManager,
+    private val cookieDomain: String
+) {
 
     private val log by getLogger()
 

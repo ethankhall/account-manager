@@ -9,13 +9,14 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import java.time.Clock
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Date
 import javax.crypto.spec.SecretKeySpec
 
 class DefaultJwtManager constructor(
-        private val clock: Clock,
-        signingKey: String,
-        private val tokenManager: TokenManager) : JwtManager {
+    private val clock: Clock,
+    signingKey: String,
+    private val tokenManager: TokenManager
+) : JwtManager {
 
     private val log by getLogger()
 

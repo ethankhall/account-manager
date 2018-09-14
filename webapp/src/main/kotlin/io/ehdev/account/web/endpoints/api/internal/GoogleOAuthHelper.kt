@@ -11,9 +11,11 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.net.URI
 
-class GoogleOAuthHelper(private val clientId: String,
-                        private val clientSecret: String,
-                        private val objectMapper: ObjectMapper) : OAuthBackendHelper {
+class GoogleOAuthHelper(
+    private val clientId: String,
+    private val clientSecret: String,
+    private val objectMapper: ObjectMapper
+) : OAuthBackendHelper {
 
     private val log by getLogger()
 

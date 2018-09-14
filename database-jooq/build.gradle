@@ -14,14 +14,10 @@ configurations {
 }
 
 dependencies {
-    jooq libraries.jooqCodeGen
-    jooq 'com.sun.xml.bind:jaxb-impl:2.2.11'
-    jooq 'com.sun.xml.bind:jaxb-core:2.2.11'
-    jooq group: 'javax.activation', name: 'activation', version: '1.1.1'
+    jooq deps.libraries.jooqCodeGen
 
-    compile libraries.database
-    compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
-    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compile deps.libraries.database
+    compile deps.libraries.validations
 }
 
 task prepairJooqConfig(type: Copy) {

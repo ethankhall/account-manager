@@ -6,8 +6,9 @@ pluginManagement {
     resolutionStrategy {
         eachPlugin { details ->
             def id = details.requested.id.id
-            def version = '0.0.29'
+            def version = '0.0.30'
             if (id in ['io.ehdev.gradle.dependency-resolve',
+                       'io.ehdev.gradle.dependency-script',
                        'io.ehdev.gradle.klint',
                        'io.ehdev.gradle.build-dir',
                        'io.ehdev.gradle.development'] && details.requested.version == 'LATEST') {

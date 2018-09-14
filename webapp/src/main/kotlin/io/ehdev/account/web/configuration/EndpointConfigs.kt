@@ -7,7 +7,12 @@ import io.ehdev.account.database.api.UserManager
 import io.ehdev.account.web.auth.jwt.JwtManager
 import io.ehdev.account.web.configuration.model.ConfigAuthenticationModel
 import io.ehdev.account.web.endpoints.RootEndpoint
-import io.ehdev.account.web.endpoints.api.*
+import io.ehdev.account.web.endpoints.api.AuthorizationEndpoints
+import io.ehdev.account.web.endpoints.api.CheckEndpoint
+import io.ehdev.account.web.endpoints.api.LogoutEndpoint
+import io.ehdev.account.web.endpoints.api.OAuthEndpoints
+import io.ehdev.account.web.endpoints.api.PermissionEndpoints
+import io.ehdev.account.web.endpoints.api.UserEndpoint
 import io.ehdev.account.web.endpoints.api.internal.DefaultEndpointHelper
 import io.ehdev.account.web.endpoints.api.internal.EndpointHelper
 import io.ehdev.account.web.endpoints.api.internal.GithubOAuthHelper
@@ -17,14 +22,17 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
-
 @Configuration
 @Import(ManagerConfiguration::class)
 open class EndpointConfigs {
 
     @Bean
-    open fun oauthEndpoints(authConfig: ConfigAuthenticationModel, userManager: UserManager,
-                            jwtManager: JwtManager, om: ObjectMapper): OAuthEndpoints {
+    open fun oauthEndpoints(
+        authConfig: ConfigAuthenticationModel,
+        userManager: UserManager,
+        jwtManager: JwtManager,
+        om: ObjectMapper
+    ): OAuthEndpoints {
         val oauthConfigs = authConfig.oauthCreds.map {
             when (it.clientName.toLowerCase()) {
                 "github" -> GithubOAuthHelper(it.clientId, it.clientSecret, om)
@@ -39,9 +47,11 @@ open class EndpointConfigs {
     }
 
     @Bean
-    open fun authorizationEndpoints(targetManager: TargetManager,
-                                    accessManager: AccessManager,
-                                    endpointHelper: EndpointHelper): AuthorizationEndpoints {
+    open fun authorizationEndpoints(
+        targetManager: TargetManager,
+        accessManager: AccessManager,
+        endpointHelper: EndpointHelper
+    ): AuthorizationEndpoints {
         return AuthorizationEndpoints(targetManager, accessManager, endpointHelper)
     }
 
@@ -57,10 +67,12 @@ open class EndpointConfigs {
     }
 
     @Bean
-    open fun permissionEndpoints(targetManager: TargetManager,
-                                 userManager: UserManager,
-                                 accessManager: AccessManager,
-                                 endpointHelper: EndpointHelper): PermissionEndpoints {
+    open fun permissionEndpoints(
+        targetManager: TargetManager,
+        userManager: UserManager,
+        accessManager: AccessManager,
+        endpointHelper: EndpointHelper
+    ): PermissionEndpoints {
         return PermissionEndpoints(targetManager, userManager, accessManager, endpointHelper)
     }
 

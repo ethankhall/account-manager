@@ -3,7 +3,6 @@ package io.ehdev.account.web
 import org.slf4j.LoggerFactory
 import org.springframework.boot.SpringApplication
 
-
 open class AccountApplication {
     companion object {
         private val log = LoggerFactory.getLogger(AccountApplication::class.java)

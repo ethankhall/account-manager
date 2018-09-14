@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
 open class MetricsConfiguration {
 
     @Bean
-    open fun metricsRegistry() : MetricRegistry {
+    open fun metricsRegistry(): MetricRegistry {
         return MetricRegistry()
     }
 }

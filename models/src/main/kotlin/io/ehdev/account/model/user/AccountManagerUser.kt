@@ -1,7 +1,12 @@
 package io.ehdev.account.model.user
 
-data class AccountManagerUser(val userId: Long, val userRef: String,
-                              val email: String, val name: String, val userType: UserType) {
+data class AccountManagerUser(
+    val userId: Long,
+    val userRef: String,
+    val email: String,
+    val name: String,
+    val userType: UserType
+) {
 
     enum class UserType {
         User,

@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    compile libraries.kotlin
-    compile libraries.logging
+    compile deps.libraries.kotlin
+    compile deps.libraries.logging
 }

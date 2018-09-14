@@ -14,9 +14,11 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 
-class AuthorizationEndpoints(private val targetManager: TargetManager,
-                             private val accessManager: AccessManager,
-                             private val endpointHelper: EndpointHelper) {
+class AuthorizationEndpoints(
+    private val targetManager: TargetManager,
+    private val accessManager: AccessManager,
+    private val endpointHelper: EndpointHelper
+) {
     fun retrieveSubject(request: ServerRequest): Mono<ServerResponse> {
         val accountPrincipal = request.verifyLoggedIn()
         val subjectName = request.pathVariable("subject")

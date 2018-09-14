@@ -15,6 +15,6 @@ class ConfigAuthenticationModel {
 
 class OauthCredentials {
     lateinit var clientName: String
-    lateinit var clientId : String
+    lateinit var clientId: String
     lateinit var clientSecret: String
 }

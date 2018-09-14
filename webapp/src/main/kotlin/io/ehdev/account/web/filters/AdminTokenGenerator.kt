@@ -5,7 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.scheduling.annotation.Scheduled
 import java.util.function.Supplier
 
-class AdminTokenGenerator: Supplier<String> {
+class AdminTokenGenerator : Supplier<String> {
 
     private val log by getLogger()
 

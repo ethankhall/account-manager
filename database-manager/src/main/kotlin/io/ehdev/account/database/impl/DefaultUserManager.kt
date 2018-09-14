@@ -8,11 +8,10 @@ import io.ehdev.account.model.user.AccountManagerUser
 import io.ehdev.account.shared.EmailRegistrationFilter
 import org.apache.commons.lang3.RandomStringUtils
 import org.jooq.DSLContext
-import javax.inject.Inject
 
-open class DefaultUserManager @Inject constructor(
-        private val dslContext: DSLContext,
-        private val emailRegistrationFilter: EmailRegistrationFilter
+open class DefaultUserManager(
+    private val dslContext: DSLContext,
+    private val emailRegistrationFilter: EmailRegistrationFilter
 ) : UserManager {
 
     private val details = UserDetailsTable.USER_DETAILS

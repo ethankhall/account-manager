@@ -24,9 +24,11 @@ interface TokenManager {
 
     data class UderlyingTokenDetails(val linkedId: Long, val privateId: Long)
 
-    data class TokenDetails(val id: Long,
-                            val publicId: String,
-                            val createDate: ZonedDateTime,
-                            val expiresAt: ZonedDateTime,
-                            val valid: Boolean)
+    data class TokenDetails(
+        val id: Long,
+        val publicId: String,
+        val createDate: ZonedDateTime,
+        val expiresAt: ZonedDateTime,
+        val valid: Boolean
+    )
 }

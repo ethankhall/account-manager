@@ -1,0 +1,95 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/account-manager # directory where steps will run
+
+    docker:
+      - image: openjdk:10-jdk
+      - image: mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: account_manager
+
+    steps:
+      - run:
+          name: Pull artifacts
+          command: |
+            curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
+            curl --location https://github.com/ethankhall/release-manager/releases/download/v0.1.9/release-manager-linux -o ~/release-manager
+            chmod +x ~/inc ~/release-manager
+
+      - checkout # check out source code to working directory
+
+      - restore_cache:
+          keys: 
+            - account-manager-{{ checksum "gradle/dependencies.toml" }}
+            - account-manager-
+      
+      - run: ~/inc exec pull-deps
+      
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+          key: account-manager-{{ checksum "gradle/dependencies.toml" }}
+      
+      - run: ~/inc exec build
+
+      - run:
+          name: Copy Artifacts
+          command: |
+           mkdir -p build/test-results
+           find . -maxdepth 5 -name 'TEST-*.xml' -exec cp {} build/test-results/ \;
+
+      - store_test_results:
+          path: build/test-results/
+        
+      - run:
+          command: |
+            ./gradlew jibExportDockerContext --jibTargetDir=build/docker-context
+            echo "gcr.io/account-manager-216313/account-manager-app:$(~/release-manager local show-version)" >> build/docker-context/image-name
+
+      - persist_to_workspace:
+          root: ~/account-manager/build
+          paths:
+            - docker-context
+
+  deploy:
+    working_directory: ~/account-manager # directory where steps will run
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: ~/account-manager
+      
+      - setup_remote_docker
+
+      - run:
+          command: |
+            cd ~/account-manager/docker-context
+            docker build -t $(cat image-name) .
+
+      - run:
+          name: Store Service Account
+          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+      
+      - run: |
+          sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          sudo gcloud --quiet components update
+          sudo gcloud components install docker-credential-gcr
+          sudo docker-credential-gcr configure-docker
+          sudo gcloud docker -- push $(cat ~/account-manager/docker-context/image-name)
+
+          workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              filter: 
+                - v.*

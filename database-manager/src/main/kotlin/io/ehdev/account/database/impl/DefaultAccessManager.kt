@@ -8,10 +8,8 @@ import io.ehdev.account.model.resource.UserId
 import io.ehdev.account.model.user.AccountManagerUser
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
-import javax.inject.Inject
 
-class DefaultAccessManager @Inject constructor(
-        private val dslContext: DSLContext) : AccessManager {
+class DefaultAccessManager(private val dslContext: DSLContext) : AccessManager {
 
     private val grantTable = RuleGrantTable.RULE_GRANT
 
@@ -70,5 +68,4 @@ class DefaultAccessManager @Inject constructor(
             }
         }
     }
-
 }

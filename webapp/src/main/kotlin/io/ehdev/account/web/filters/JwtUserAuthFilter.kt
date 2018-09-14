@@ -40,5 +40,4 @@ class JwtUserAuthFilter(private val jwtManager: JwtManager, private val userMana
 
         return headerValue ?: cookieValue
     }
-
 }

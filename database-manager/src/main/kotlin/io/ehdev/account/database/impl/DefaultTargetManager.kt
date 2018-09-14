@@ -10,11 +10,8 @@ import io.ehdev.account.model.Result
 import io.ehdev.account.model.resource.AccessRuleModel
 import io.ehdev.account.model.resource.TargetModel
 import org.jooq.DSLContext
-import javax.inject.Inject
 
-class DefaultTargetManager @Inject constructor(
-        private val dslContext: DSLContext
-) : TargetManager {
+class DefaultTargetManager(private val dslContext: DSLContext) : TargetManager {
 
     private val targetTable = Tables.TARGET
     private val ruleTable = Tables.TARGET_ACCESS_RULE

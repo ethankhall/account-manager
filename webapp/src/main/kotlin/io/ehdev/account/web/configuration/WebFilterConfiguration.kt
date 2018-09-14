@@ -2,8 +2,11 @@ package io.ehdev.account.web.configuration
 
 import io.ehdev.account.database.api.UserManager
 import io.ehdev.account.web.auth.jwt.JwtManager
-import io.ehdev.account.web.filters.*
-import org.springframework.beans.factory.annotation.Value
+import io.ehdev.account.web.filters.AdminTokenGenerator
+import io.ehdev.account.web.filters.HeaderAdminFilter
+import io.ehdev.account.web.filters.JwtUserAuthFilter
+import io.ehdev.account.web.filters.NoopFilter
+import io.ehdev.account.web.filters.SessionFilter
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,7 +18,6 @@ import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfigu
 import org.springframework.web.server.WebFilter
 import java.time.Clock
 import java.util.function.Supplier
-
 
 @Configuration
 @Import(ManagerConfiguration::class)

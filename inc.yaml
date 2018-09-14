@@ -1,8 +1,9 @@
 exec:
-  ci:
-    commands:
-      - ./gradlew assemble
-      - ./gradlew test
+  repo-push:
+    commands: ./gradlew jib --image=gcr.io/account-manager-216313/account-manager
+
+  pull-deps:
+    commands: ./gradlew resolveDependencies
 
   build:
     commands: ./gradlew build

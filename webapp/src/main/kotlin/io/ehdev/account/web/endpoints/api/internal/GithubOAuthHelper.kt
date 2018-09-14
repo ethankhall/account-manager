@@ -7,15 +7,15 @@ import com.github.scribejava.core.model.OAuthRequest
 import com.github.scribejava.core.model.Verb
 import com.github.scribejava.core.oauth.OAuth20Service
 import io.mikael.urlbuilder.UrlBuilder
-import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.net.URI
-import java.util.*
 
-class GithubOAuthHelper(private val clientId: String,
-                        private val clientSecret: String,
-                        private val objectMapper: ObjectMapper) : OAuthBackendHelper {
+class GithubOAuthHelper(
+    private val clientId: String,
+    private val clientSecret: String,
+    private val objectMapper: ObjectMapper
+) : OAuthBackendHelper {
 
     override fun buildRedirect(callbackUrl: URI, state: String): URI {
         val service = createNewService(callbackUrl, state)

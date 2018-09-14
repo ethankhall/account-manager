@@ -18,10 +18,12 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 
-class PermissionEndpoints(private val targetManager: TargetManager,
-                          private val userManager: UserManager,
-                          private val accessManager: AccessManager,
-                          private val endpointHelper: EndpointHelper) {
+class PermissionEndpoints(
+    private val targetManager: TargetManager,
+    private val userManager: UserManager,
+    private val accessManager: AccessManager,
+    private val endpointHelper: EndpointHelper
+) {
 
     fun addUser(request: ServerRequest): Mono<ServerResponse> {
         val user = request.verifyLoggedIn()

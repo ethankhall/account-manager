@@ -16,6 +16,6 @@ flyway {
 }
 
 dependencies {
-    compile libraries.database
-    compile libraries.kotlin
+    compile deps.libraries.database
+    compile deps.libraries.kotlin
 }

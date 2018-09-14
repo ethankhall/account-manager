@@ -7,54 +7,26 @@ plugins {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.51",
-            "org.jetbrains.kotlin:kotlin-stdlib:1.2.51",
-            "org.jetbrains.kotlin:kotlin-reflect:1.2.51"
+    compile deps.libraries.kotlin
+    compile deps.libraries.jackson
 
-    compile "com.fasterxml.jackson.core:jackson-annotations:2.9.6",
-            "com.fasterxml.jackson.core:jackson-databind:2.9.6",
-            "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.6",
-            "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.6"
+    compile deps.libraries.logging
 
-    compile "org.slf4j:slf4j-api:1.7.25",
-            group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1',
-            'org.apache.logging.log4j:log4j-slf4j18-impl:2.11.1'
+    compile deps.libraries.spring
 
-    compile 'org.springframework:spring-context:5.0.8.RELEASE',
-            'org.springframework:spring-webflux:5.0.8.RELEASE',
-            'org.springframework:spring-tx:5.0.8.RELEASE',
-            'org.springframework:spring-jdbc:5.0.8.RELEASE',
-            'org.springframework:spring-context-support:5.0.8.RELEASE',
-            'io.projectreactor.ipc:reactor-netty:0.7.8.RELEASE',
-            'org.springframework.boot:spring-boot:2.0.4.RELEASE',
-            'org.springframework.boot:spring-boot-autoconfigure:2.0.4.RELEASE',
-            'org.springframework.boot:spring-boot-starter:2.0.4.RELEASE',
-            'org.springframework.session:spring-session-data-redis:2.0.6.RELEASE',
-            'io.lettuce:lettuce-core:5.0.5.RELEASE'
+    compile deps.libraries.common
 
-    compile 'org.hibernate.validator:hibernate-validator:6.0.12.Final',
-            'org.glassfish:javax.el:3.0.1-b08'
+    compile deps.libraries.database
 
-    compile 'com.zaxxer:HikariCP:3.2.0',
-            'mysql:mysql-connector-java:8.0.11'
+    compile deps.libraries.oauth
 
-    compile 'com.github.scribejava:scribejava-apis:5.5.0',
-            'com.github.scribejava:scribejava-core:5.5.0',
-            'io.mikael:urlbuilder:2.0.9'
+    compile deps.libraries.freemarker
 
-    compile 'org.freemarker:freemarker:2.3.28'
+    annotationProcessor deps.libraries.springAnnotation
 
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    compile deps.libraries.jwt
 
-    compile 'org.yaml:snakeyaml:1.23'
-
-    compile "org.jooq:jooq:3.11.3"
-
-    compile 'io.jsonwebtoken:jjwt:0.6.0'
-
-    compile "io.dropwizard.metrics:metrics-core:3.1.2"
-
-    compile 'org.apache.commons:commons-lang3:3.7'
+    compile deps.libraries.commonsLang
 
     compile project(":models")
     compile project(":database-manager")
@@ -77,3 +49,5 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 shadowJar {
     append 'META-INF/spring.factories'
 }
+
+jib.to.image = 'gcr.io/account-manager-216313/account-manager-app'

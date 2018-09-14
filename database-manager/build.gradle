@@ -7,15 +7,13 @@ plugins {
 dependencies {
     compile project(":database-jooq")
     compile project(":models")
-    compile libraries.kotlin
-    compile libraries.logging
-    compile libraries.database
-    compile libraries.dagger
-    compile libraries.commonsLang
-    compile 'javax.annotation:javax.annotation-api:1.2'
-    compile 'org.springframework:spring-webflux:5.0.8.RELEASE'
+    compile deps.libraries.kotlin
+    compile deps.libraries.logging
+    compile deps.libraries.database
+    compile deps.libraries.commonsLang
+    compile deps.libraries.spring
 
-    testCompile libraries.testingLibraries
+    testCompile deps.libraries.testingLibraries
 }
 
 integTest.dependsOn ':database-migration:flywayMigrate'

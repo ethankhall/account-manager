@@ -8,13 +8,9 @@ import org.jooq.DSLContext
 import java.time.Clock
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.*
-import javax.inject.Inject
+import java.util.UUID
 
-class DefaultTokenManager @Inject constructor(
-        private val clock: Clock,
-        private val dslContext: DSLContext
-) : TokenManager {
+class DefaultTokenManager(private val clock: Clock, private val dslContext: DSLContext) : TokenManager {
 
     override fun getTokenData(id: String): TokenManager.UderlyingTokenDetails? {
 

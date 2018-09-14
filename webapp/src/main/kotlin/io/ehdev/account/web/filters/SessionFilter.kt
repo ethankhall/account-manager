@@ -12,7 +12,6 @@ class SessionFilter(private val clock: Clock) : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         return exchange.session.map { session ->
 
-
             if (!session.isStarted) {
                 session.start()
             }
@@ -21,7 +20,6 @@ class SessionFilter(private val clock: Clock) : WebFilter {
             if (!session.attributes.containsKey("uniqueId")) {
                 session.attributes["uniqueId"] = RandomStringUtils.randomAlphanumeric(10)
             }
-
 
             session.save()
         }.flatMap {

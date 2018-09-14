@@ -1,11 +1,11 @@
 package io.ehdev.account.web.configuration
 
+import io.ehdev.account.web.endpoints.RootEndpoint
 import io.ehdev.account.web.endpoints.api.AuthorizationEndpoints
 import io.ehdev.account.web.endpoints.api.CheckEndpoint
 import io.ehdev.account.web.endpoints.api.LogoutEndpoint
 import io.ehdev.account.web.endpoints.api.OAuthEndpoints
 import io.ehdev.account.web.endpoints.api.PermissionEndpoints
-import io.ehdev.account.web.endpoints.RootEndpoint
 import io.ehdev.account.web.endpoints.api.UserEndpoint
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,13 +26,15 @@ open class ApplicationRoutesConfiguration {
     open fun webHandler(router: RouterFunction<ServerResponse>): WebHandler = toWebHandler(router, HandlerStrategies.withDefaults())
 
     @Bean
-    open fun mainServer(authorizationEndpoints: AuthorizationEndpoints,
-                        checkEndpoint: CheckEndpoint,
-                        permissionEndpoints: PermissionEndpoints,
-                        userEndpoints: UserEndpoint,
-                        oauthEndpoint: OAuthEndpoints,
-                        logoutEndpoint: LogoutEndpoint,
-                        rootEndpoint: RootEndpoint): RouterFunction<ServerResponse> {
+    open fun mainServer(
+        authorizationEndpoints: AuthorizationEndpoints,
+        checkEndpoint: CheckEndpoint,
+        permissionEndpoints: PermissionEndpoints,
+        userEndpoints: UserEndpoint,
+        oauthEndpoint: OAuthEndpoints,
+        logoutEndpoint: LogoutEndpoint,
+        rootEndpoint: RootEndpoint
+    ): RouterFunction<ServerResponse> {
         return router {
             accept(MediaType.APPLICATION_JSON).nest {
                 GET("/api/v1/authorization/{subject}", authorizationEndpoints::retrieveSubject)

@@ -10,5 +10,4 @@ interface JwtManager {
     fun createToken(tokenDetails: TokenManager.TokenDetails): String
 
     fun parseToken(token: String?): JwtTokenAuthentication?
-
 }

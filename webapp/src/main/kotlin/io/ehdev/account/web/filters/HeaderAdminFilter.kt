@@ -22,5 +22,4 @@ class HeaderAdminFilter(private val supplier: Supplier<String>) : WebFilter {
 
         return chain.filter(nextExchange)
     }
-
 }
