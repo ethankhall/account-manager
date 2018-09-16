@@ -80,6 +80,8 @@ jobs:
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
           gcloud auth configure-docker
           docker push $(cat ~/account-manager/docker-context/image-name)
+          docker tag $(cat ~/gadget/docker-context/image-name) gcr.io/account-manager-216313/account-manager-app:latest
+          docker push gcr.io/account-manager-216313/account-manager-app:latest
 
 workflows:
   version: 2
