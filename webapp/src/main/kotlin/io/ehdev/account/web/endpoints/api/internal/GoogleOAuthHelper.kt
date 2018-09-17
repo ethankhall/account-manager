@@ -34,6 +34,7 @@ class GoogleOAuthHelper(
         val response = service.execute(request)
 
         if (!response.isSuccessful) {
+            log.info("Unable to access Google! Repose body was `{}`", response.body)
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to access Google. Try again?")
         }
 
