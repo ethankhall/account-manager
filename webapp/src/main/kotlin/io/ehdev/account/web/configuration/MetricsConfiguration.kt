@@ -4,8 +4,6 @@ import com.codahale.metrics.MetricRegistry
 import org.springframework.boot.actuate.autoconfigure.health.HealthEndpointAutoConfiguration
 import org.springframework.boot.actuate.autoconfigure.health.HealthIndicatorAutoConfiguration
 import org.springframework.boot.actuate.autoconfigure.jdbc.DataSourceHealthIndicatorAutoConfiguration
-import org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
-import org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
 import org.springframework.boot.actuate.autoconfigure.web.reactive.ReactiveManagementContextAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

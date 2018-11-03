@@ -30,14 +30,14 @@ open class ApplicationRoutesConfiguration {
 
     @Bean
     open fun mainServer(
-            authorizationEndpoints: AuthorizationEndpoints,
-            checkEndpoint: CheckEndpoint,
-            permissionEndpoints: PermissionEndpoints,
-            userEndpoints: UserEndpoint,
-            oauthEndpoint: OAuthEndpoints,
-            logoutEndpoint: LogoutEndpoint,
-            rootEndpoint: RootEndpoint,
-            healthEndpoint: HealthEndpoint
+        authorizationEndpoints: AuthorizationEndpoints,
+        checkEndpoint: CheckEndpoint,
+        permissionEndpoints: PermissionEndpoints,
+        userEndpoints: UserEndpoint,
+        oauthEndpoint: OAuthEndpoints,
+        logoutEndpoint: LogoutEndpoint,
+        rootEndpoint: RootEndpoint,
+        healthEndpoint: HealthEndpoint
     ): RouterFunction<ServerResponse> {
         return router {
             accept(MediaType.APPLICATION_JSON).nest {
