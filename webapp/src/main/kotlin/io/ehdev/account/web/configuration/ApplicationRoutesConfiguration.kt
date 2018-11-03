@@ -7,6 +7,8 @@ import io.ehdev.account.web.endpoints.api.LogoutEndpoint
 import io.ehdev.account.web.endpoints.api.OAuthEndpoints
 import io.ehdev.account.web.endpoints.api.PermissionEndpoints
 import io.ehdev.account.web.endpoints.api.UserEndpoint
+import org.springframework.boot.actuate.health.Health
+import org.springframework.boot.actuate.health.HealthEndpoint
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -17,9 +19,10 @@ import org.springframework.web.reactive.function.server.RouterFunctions.toWebHan
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
 import org.springframework.web.server.WebHandler
+import reactor.core.publisher.Mono
 
 @Configuration
-@Import(EndpointConfigs::class, WebFilterConfiguration::class)
+@Import(EndpointConfigs::class, WebFilterConfiguration::class, MetricsConfiguration::class)
 open class ApplicationRoutesConfiguration {
 
     @Bean
@@ -27,13 +30,14 @@ open class ApplicationRoutesConfiguration {
 
     @Bean
     open fun mainServer(
-        authorizationEndpoints: AuthorizationEndpoints,
-        checkEndpoint: CheckEndpoint,
-        permissionEndpoints: PermissionEndpoints,
-        userEndpoints: UserEndpoint,
-        oauthEndpoint: OAuthEndpoints,
-        logoutEndpoint: LogoutEndpoint,
-        rootEndpoint: RootEndpoint
+            authorizationEndpoints: AuthorizationEndpoints,
+            checkEndpoint: CheckEndpoint,
+            permissionEndpoints: PermissionEndpoints,
+            userEndpoints: UserEndpoint,
+            oauthEndpoint: OAuthEndpoints,
+            logoutEndpoint: LogoutEndpoint,
+            rootEndpoint: RootEndpoint,
+            healthEndpoint: HealthEndpoint
     ): RouterFunction<ServerResponse> {
         return router {
             accept(MediaType.APPLICATION_JSON).nest {
@@ -54,6 +58,8 @@ open class ApplicationRoutesConfiguration {
             accept(MediaType.TEXT_HTML).nest {
                 GET("/", rootEndpoint::getRoot)
             }
+            (GET("/actuator/health") or HEAD("/actuator/health"))
+                    .invoke { ServerResponse.ok().body(Mono.just(healthEndpoint.health()), Health::class.java) }
         }
     }
 }
