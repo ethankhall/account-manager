@@ -23,3 +23,5 @@ spring:
     username: root
     password: password
   flyway.table: flyway_schema_history
+
+management.server.port: 9002

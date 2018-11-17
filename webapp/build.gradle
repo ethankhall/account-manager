@@ -2,8 +2,7 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
     id 'application'
-    id "com.github.johnrengelman.shadow" version "2.0.4"
-    id 'com.google.cloud.tools.jib' version '0.9.10'
+    id 'com.google.cloud.tools.jib' version '0.10.0'
 }
 
 dependencies {
@@ -46,8 +45,24 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
-shadowJar {
-    append 'META-INF/spring.factories'
+jib {
+    to {
+        image = 'gcr.io/account-manager-216313/account-manager-app'
+        tags = [version.toString(), 'latest']
+        auth {
+            username = '_json_key'
+        }
+    }
 }
 
-jib.to.image = 'gcr.io/account-manager-216313/account-manager-app'
+task copyDistForRelease(type: Copy, dependsOn: 'distZip') {
+    from distZip.archivePath
+    into "${rootDir}/build/release-dir"
+    rename distZip.archiveName, 'account-manager.zip'
+}
+
+startScripts {
+    doLast {
+        windowsScript.text = windowsScript.text.replaceAll('set CLASSPATH=.*', 'set CLASSPATH=.;%APP_HOME%/lib/*')
+    }
+}

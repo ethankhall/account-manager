@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Import
 import javax.sql.DataSource
 
 @Configuration
-@Import(MetricsConfiguration::class)
 open class DatabaseConfiguration {
 
     @Bean

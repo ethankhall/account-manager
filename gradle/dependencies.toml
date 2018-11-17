@@ -3,15 +3,14 @@ kotlin = { version = "1.2.51", group = "org.jetbrains.kotlin" }
 jackson = { version = "2.9.6", group = "com.fasterxml.jackson.core" }
 jacksonData = { version = "2.9.6", group = "com.fasterxml.jackson.datatype" }
 jacksonModule = { version = "2.9.6", group = "com.fasterxml.jackson.module" }
-spring = { version = "5.0.8.RELEASE", group = "org.springframework" }
-springBoot = { version = "2.0.4.RELEASE", group = "org.springframework.boot" }
+spring = { version = "5.1.2.RELEASE", group = "org.springframework" }
+springBoot = { version = "2.1.0.RELEASE", group = "org.springframework.boot" }
 
 [libraries]
 common = [
     'com.google.guava:guava:26.0-jre',
     'org.hibernate.validator:hibernate-validator:6.0.12.Final',
-    'org.glassfish:javax.el:3.0.1-b08',
-    "io.dropwizard.metrics:metrics-core:3.1.2"
+    'org.glassfish:javax.el:3.0.1-b08'
 ]
 
 kotlin = [
@@ -32,7 +31,7 @@ spring = [
     'org.springframework:spring-tx',
     'org.springframework:spring-jdbc',
     'org.springframework:spring-context-support',
-    'io.projectreactor.ipc:reactor-netty:0.7.8.RELEASE',
+    'io.projectreactor.netty:reactor-netty:0.8.2.RELEASE',
     'org.springframework.boot:spring-boot',
     'org.springframework.boot:spring-boot-autoconfigure',
     'org.springframework.boot:spring-boot-starter',

@@ -30,11 +30,4 @@ open class ContainerConfiguration {
     @Bean
     open fun reactiveSessionRepository() = ReactiveMapSessionRepository(ConcurrentHashMap(20))
 
-    @Bean
-    open fun httpHandler(context: ApplicationContext): HttpHandler {
-        return WebHttpHandlerBuilder.applicationContext(context).build()
-    }
-
-    @Bean
-    open fun nettyReactiveWebServerFactory() = NettyReactiveWebServerFactory()
 }

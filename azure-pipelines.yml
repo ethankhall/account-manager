@@ -1,0 +1,49 @@
+pool:
+  vmImage: 'ubuntu-16.04'
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+      - README.md
+      - docs
+      - version.properties
+steps:
+  - script: |
+      curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
+      curl --location https://github.com/ethankhall/release-manager/releases/download/v0.1.9/release-manager-linux -o ~/release-manager
+      chmod +x ~/inc ~/release-manager
+      ~/inc exec build
+    displayName: 'Prepare the machine'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: build/release-dir
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: artifacts
+
+  - script: |
+      ~/release-manager github release-and-bump
+      ~/release-manager github gadget.zip=build/webapp/gadget-release/gadget.zip
+      export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+      echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+      sudo apt-get update && sudo apt-get install google-cloud-sdk
+
+      echo $GCP_SERVICE_TOKEN | base64 -d  > ${HOME}/gcloud-service-key.json
+      gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+      gcloud --quiet config set project ${GCP_PROJECT_ID}
+
+      ./gradlew jib -Djib.to.auth.username="oauth2accesstoken" -Djib.to.auth.password="$(gcloud auth print-access-token)"
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
