@@ -30,7 +30,6 @@ class JooqMetricsCollector(metrics: MeterRegistry, slowQueryTimeout: Long) : Def
     class LocalTimer(private val timer: Timer, private val slowQueryTimeout: Long) {
         private val log = LoggerFactory.getLogger(LocalTimer::class.java)!!
 
-
         private var instance: Timer.Sample? = null
 
         fun start() {

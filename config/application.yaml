@@ -18,7 +18,7 @@ authorization:
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/account_manager?verifyServerCertificate=false&useSSL=true
+    url: jdbc:mysql://localhost:3308/account_manager?verifyServerCertificate=false&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: password
