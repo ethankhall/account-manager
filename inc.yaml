@@ -1,10 +1,9 @@
 exec:
-  repo-push:
-    commands: ./gradlew jib --image=gcr.io/account-manager-216313/account-manager
-
   pull-deps:
     commands: ./gradlew resolveDependencies
 
   build:
-    commands: ./gradlew build
+    commands:
+      - docker-compose up -d
+      - ./gradlew build
     description: Run a normal build
