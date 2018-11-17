@@ -15,8 +15,11 @@ steps:
       curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
       curl --location https://github.com/ethankhall/release-manager/releases/download/v0.1.9/release-manager-linux -o ~/release-manager
       chmod +x ~/inc ~/release-manager
-      ~/inc exec build
     displayName: 'Prepare the machine'
+
+  - script: |
+      ~/inc exec build
+      ~/inc exec package
 
   - task: PublishTestResults@2
     inputs:

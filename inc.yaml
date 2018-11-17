@@ -5,5 +5,8 @@ exec:
   build:
     commands:
       - docker-compose up -d
-      - ./gradlew build copyDistForRelease
+      - ./gradlew build
     description: Run a normal build
+
+  package:
+    commands: ./gradlew copyDistForRelease
