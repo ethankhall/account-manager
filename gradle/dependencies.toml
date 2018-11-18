@@ -38,7 +38,7 @@ spring = [
     'org.springframework.boot:spring-boot-starter-aop',
     'org.springframework.boot:spring-boot-actuator',
     'org.springframework.boot:spring-boot-starter-actuator',
-    'org.springframework.session:spring-session-core:2.0.6.RELEASE',
+    'org.springframework.session:spring-session-data-redis:2.0.6.RELEASE',
     'io.lettuce:lettuce-core:5.0.5.RELEASE',
     'org.yaml:snakeyaml:1.23'
 ]
