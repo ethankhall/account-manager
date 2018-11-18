@@ -32,10 +32,10 @@ open class ApplicationRoutesConfiguration {
         rootEndpoint: RootEndpoint,
         environment: Environment
     ): RouterFunction<ServerResponse> {
-        val serverPort = environment.getRequiredProperty("server.port").toInt()
+        val managementPort = environment.getProperty("management.server.port", "-2").toInt()
 
         return router {
-            RequestPredicate { it.uri().port == serverPort }.nest {
+            RequestPredicate { it.uri().port != managementPort }.nest {
                 accept(MediaType.APPLICATION_JSON).nest {
                     GET("/api/v1/authorization/{subject}", authorizationEndpoints::retrieveSubject)
                     DELETE("/api/v1/authorization/{subject}", authorizationEndpoints::deleteSubject)

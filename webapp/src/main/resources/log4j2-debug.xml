@@ -9,11 +9,9 @@
     <Loggers>
         <Logger name="io.ehdev" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="MyFile"/>
         </Logger>
         <Root level="DEBUG">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="MyFile"/>
         </Root>
     </Loggers>
 </Configuration>
