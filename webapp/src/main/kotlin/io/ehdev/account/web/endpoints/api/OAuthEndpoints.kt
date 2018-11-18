@@ -3,6 +3,7 @@ package io.ehdev.account.web.endpoints.api
 import io.ehdev.account.database.api.UserManager
 import io.ehdev.account.getLogger
 import io.ehdev.account.web.auth.jwt.JwtManager
+import io.ehdev.account.web.configuration.findScheme
 import io.ehdev.account.web.endpoints.api.internal.OAuthBackendHelper
 import io.ehdev.account.web.filters.HeaderConst.COOKIE_NAME
 import org.springframework.core.ParameterizedTypeReference
@@ -27,7 +28,11 @@ class OAuthEndpoints(
         val provider = request.pathVariable("provider")
         val providerBackend = providerMap[provider.toLowerCase()] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         val redirectValue = request.queryParam(REDIRECT_NAME).orElseGet {
-            request.uriBuilder().replacePath("/api/v1/user").build().toString()
+            request.uriBuilder()
+                    .replacePath("/api/v1/user")
+                    .scheme(request.findScheme())
+                    .build()
+                    .toString()
         }
 
         return request.session().flatMap {
@@ -37,6 +42,7 @@ class OAuthEndpoints(
             val callbackUri = request.uriBuilder()
                     .replaceQuery(null)
                     .path("/callback")
+                    .scheme(request.findScheme())
                     .build()
 
             val uniqueId = it.attributes["uniqueId"] as String
@@ -59,7 +65,10 @@ class OAuthEndpoints(
         }
 
         val providerBackend = providerMap[provider.toLowerCase()] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-        val callbackUri = request.uriBuilder().replaceQuery(null).build()
+        val callbackUri = request.uriBuilder()
+                .scheme(request.findScheme())
+                .replaceQuery(null)
+                .build()
 
         return request.session().flatMap {
             val redirectTo = it.attributes["redirectUrl"] as String
