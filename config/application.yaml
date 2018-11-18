@@ -22,6 +22,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: password
+  session:
+      store-type: redis
+      redis:
+        flush-mode: "IMMEDIATE"
+        namespace: "spring:session"
+  "redis":
+      host: localhost
+      port: 6379
   flyway.table: flyway_schema_history
 
 server.port: 8080

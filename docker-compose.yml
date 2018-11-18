@@ -10,3 +10,8 @@ services:
       MYSQL_DATABASE: account_manager
     ports:
       - 3308:3306
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
