@@ -1,12 +1,14 @@
 package io.ehdev.account.web.filters
 
 import org.apache.commons.lang3.RandomStringUtils
+import org.springframework.core.annotation.Order
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 import java.time.Clock
 
+@Order()
 class SessionFilter(private val clock: Clock) : WebFilter {
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
