@@ -4,7 +4,7 @@ services:
   db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: account_manager

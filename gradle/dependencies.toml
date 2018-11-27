@@ -68,6 +68,10 @@ springAnnotation = [
     "org.springframework.boot:spring-boot-configuration-processor"
 ]
 
+springTest = [
+    "org.springframework:spring-test"
+]
+
 jackson = [
         "com.fasterxml.jackson.core:jackson-annotations",
         "com.fasterxml.jackson.core:jackson-databind",

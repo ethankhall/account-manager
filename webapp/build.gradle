@@ -30,6 +30,9 @@ dependencies {
     compile project(":models")
     compile project(":database-manager")
     compile project(":database-migration")
+    
+    testCompile deps.libraries.testingLibraries
+    testCompile deps.libraries.springTest
 }
 
 configurations.compile {

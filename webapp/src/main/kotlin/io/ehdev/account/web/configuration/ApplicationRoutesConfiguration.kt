@@ -40,6 +40,7 @@ open class ApplicationRoutesConfiguration {
                     GET("/api/v1/authorization/{subject}", authorizationEndpoints::retrieveSubject)
                     DELETE("/api/v1/authorization/{subject}", authorizationEndpoints::deleteSubject)
                     POST("/api/v1/authorization", authorizationEndpoints::createSubject)
+                    GET("/api/v1/check/{subject}/permission/{resource}", checkEndpoint::checkPermissionList)
                     GET("/api/v1/check/{subject}/permission/{resource}/{action}", checkEndpoint::checkPermission)
                     GET("/logout", logoutEndpoint::logout)
                     POST("/api/v1/authorization/{subject}/permission", permissionEndpoints::newPermission)
