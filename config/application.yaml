@@ -8,6 +8,9 @@ authentication:
   - clientName: GOOGLE
     clientId: <id>
     clientSecret: <secret>
+  - clientName: ONELOGIN
+    clientId: <id>
+    clientSecret: <secret>
   serviceBaseUrl: http://localhost:8080
   cookieDomain: localhost
 

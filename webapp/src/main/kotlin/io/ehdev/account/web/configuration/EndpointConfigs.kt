@@ -17,6 +17,7 @@ import io.ehdev.account.web.endpoints.api.internal.DefaultEndpointHelper
 import io.ehdev.account.web.endpoints.api.internal.EndpointHelper
 import io.ehdev.account.web.endpoints.api.internal.GithubOAuthHelper
 import io.ehdev.account.web.endpoints.api.internal.GoogleOAuthHelper
+import io.ehdev.account.web.endpoints.api.internal.OneLoginOAuthHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -37,6 +38,7 @@ open class EndpointConfigs {
             when (it.clientName.toLowerCase()) {
                 "github" -> GithubOAuthHelper(it.clientId, it.clientSecret, om)
                 "google" -> GoogleOAuthHelper(it.clientId, it.clientSecret, om)
+                "onelogin" -> OneLoginOAuthHelper(it.clientId, it.clientSecret, om)
                 else -> throw RuntimeException("Unknown OAuth provider ${it.clientName}")
             }
         }.associate {

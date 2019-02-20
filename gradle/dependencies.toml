@@ -95,8 +95,8 @@ validations = [
 ]
 
 oauth = [
-    'com.github.scribejava:scribejava-apis:5.5.0',
-    'com.github.scribejava:scribejava-core:5.5.0',
+    'com.github.scribejava:scribejava-apis:6.3.0',
+    'com.github.scribejava:scribejava-core:6.3.0',
     'io.mikael:urlbuilder:2.0.9'
 ]
 
