@@ -13,11 +13,12 @@ trigger:
 steps:
   - script: |
       curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
-      curl --location https://github.com/ethankhall/release-manager/releases/download/v0.1.9/release-manager-linux -o ~/release-manager
-      chmod +x ~/inc ~/release-manager
+      curl --location https://github.com/ethankhall/crom/releases/download/v0.1.5/crom-linux -o ~/crom
+      chmod +x ~/inc ~/crom
     displayName: 'Prepare the machine'
 
   - script: |
+      ~/crom update-version --pre-release release
       ~/inc exec build
       ~/inc exec package
 
@@ -36,8 +37,8 @@ steps:
       artifactName: artifacts
 
   - script: |
-      ~/release-manager github release-and-bump
-      ~/release-manager github gadget.zip=build/webapp/gadget-release/gadget.zip
+      ~/crom tag-version --source local,github --ignore-changes
+      ~/crom upload-artifacts gadget.zip=build/webapp/gadget-release/gadget.zip
       export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
       echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
       curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -

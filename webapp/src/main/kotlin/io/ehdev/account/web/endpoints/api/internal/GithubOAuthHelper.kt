@@ -18,12 +18,12 @@ class GithubOAuthHelper(
 ) : OAuthBackendHelper {
 
     override fun buildRedirect(callbackUrl: URI, state: String): URI {
-        val service = createNewService(callbackUrl, state)
-        return UrlBuilder.fromString(service.authorizationUrl).toUri()
+        val service = createNewService(callbackUrl)
+        return UrlBuilder.fromString(service.getAuthorizationUrl(state)).toUri()
     }
 
     override fun authenticate(code: String, callbackUrl: URI, state: String): OAuthUserDetails {
-        val service = createNewService(callbackUrl, state)
+        val service = createNewService(callbackUrl)
 
         val accessToken = service.getAccessToken(code)
         val request = OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL)
@@ -44,10 +44,9 @@ class GithubOAuthHelper(
 
     override fun pathProviderName(): String = "github"
 
-    private fun createNewService(callback: URI, state: String): OAuth20Service {
+    private fun createNewService(callback: URI): OAuth20Service {
         return ServiceBuilder(clientId)
                 .apiSecret(clientSecret)
-                .state(state)
                 .callback(callback.toString())
                 .build(GitHubApi.instance())
     }

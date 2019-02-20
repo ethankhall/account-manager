@@ -22,12 +22,12 @@ class OneLoginOAuthHelper(
     private val oneLogin = OneLogin()
 
     override fun buildRedirect(callbackUrl: URI, state: String): URI {
-        val service = createNewService(callbackUrl, state)
-        return UrlBuilder.fromString(service.authorizationUrl).toUri()
+        val service = createNewService(callbackUrl)
+        return UrlBuilder.fromString(service.getAuthorizationUrl(state)).toUri()
     }
 
     override fun authenticate(code: String, callbackUrl: URI, state: String): OAuthUserDetails {
-        val service = createNewService(callbackUrl, state)
+        val service = createNewService(callbackUrl)
 
         val accessToken = service.getAccessToken(code)
         val request = OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL)
@@ -56,10 +56,9 @@ class OneLoginOAuthHelper(
 
     override fun pathProviderName(): String = "onelogin"
 
-    private fun createNewService(callback: URI, state: String): OAuth20Service {
+    private fun createNewService(callback: URI): OAuth20Service {
         return oneLogin
-                .createService(clientId, clientSecret, callback.toString(), "openid profile", null,
-                        state, "code", null, null, null)
+                .createService(clientId, clientSecret, callback.toString(), "openid profile", null, "code", null, null, null)
     }
 
     class OneLogin : DefaultApi20() {
@@ -70,6 +69,5 @@ class OneLoginOAuthHelper(
         override fun getAccessTokenEndpoint(): String {
             return "https://openid-connect.onelogin.com/oidc/token"
         }
-
     }
 }
