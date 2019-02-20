@@ -6,7 +6,6 @@ import io.ehdev.account.web.filters.AdminTokenGenerator
 import io.ehdev.account.web.filters.HeaderAdminFilter
 import io.ehdev.account.web.filters.JwtUserAuthFilter
 import io.ehdev.account.web.filters.NoopFilter
-import io.ehdev.account.web.filters.SessionFilter
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,7 +15,6 @@ import org.springframework.web.reactive.config.ViewResolverRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
 import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfigurer
 import org.springframework.web.server.WebFilter
-import java.time.Clock
 import java.util.function.Supplier
 
 @Configuration
@@ -54,9 +52,6 @@ open class WebFilterConfiguration : WebFluxConfigurer {
         configurer.setResourceLoader(applicationContext)
         return configurer
     }
-
-    @Bean
-    open fun sessionFilter(clock: Clock) = SessionFilter(clock)
 
     override fun configureViewResolvers(registry: ViewResolverRegistry) {
         registry.freeMarker()

@@ -6,6 +6,8 @@ import io.ehdev.account.web.auth.jwt.JwtManager
 import io.ehdev.account.web.configuration.findScheme
 import io.ehdev.account.web.endpoints.api.internal.OAuthBackendHelper
 import io.ehdev.account.web.filters.HeaderConst.COOKIE_NAME
+import io.ehdev.account.web.filters.HeaderConst.OAUTH_COOKIE
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
@@ -14,6 +16,7 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 import java.net.URI
+import java.time.Duration
 
 class OAuthEndpoints(
     private val providerMap: Map<String, OAuthBackendHelper>,
@@ -35,22 +38,26 @@ class OAuthEndpoints(
                     .toString()
         }
 
-        return request.session().flatMap {
-            it.attributes["redirectUrl"] = redirectValue
-            it.save()
+        val uniqueId = RandomStringUtils.randomAlphanumeric(10)
+        val token = jwtManager.createHandshakeToken(
+                mapOf("redirectUrl" to redirectValue, "uniqueId" to uniqueId))
 
-            val callbackUri = request.uriBuilder()
-                    .replaceQuery(null)
-                    .path("/callback")
-                    .scheme(request.findScheme())
-                    .build()
+        val callbackUri = request.uriBuilder()
+                .replaceQuery(null)
+                .path("/callback")
+                .scheme(request.findScheme())
+                .build()
 
-            val uniqueId = it.attributes["uniqueId"] as String
+        log.debug("Redirecting to {}, the callback URL is {}", provider, callbackUri)
+        val redirectUri = providerBackend.buildRedirect(callbackUri, uniqueId)
 
-            log.debug("Redirecting to {}, the callback URL is {}", provider, callbackUri)
-            val redirectUri = providerBackend.buildRedirect(callbackUri, uniqueId)
-            ServerResponse.seeOther(redirectUri).build()
-        }
+        val cookie = ResponseCookie.from(OAUTH_COOKIE, token)
+                .path("/")
+                .domain(cookieDomain)
+                .maxAge(Duration.ofMinutes(1L))
+                .build()
+
+        return ServerResponse.seeOther(redirectUri).cookie(cookie).build()
     }
 
     fun callback(request: ServerRequest): Mono<ServerResponse> {
@@ -70,26 +77,26 @@ class OAuthEndpoints(
                 .replaceQuery(null)
                 .build()
 
-        return request.session().flatMap {
-            val redirectTo = it.attributes["redirectUrl"] as String
-            val uniqueId = it.attributes["uniqueId"] as String
+        val oauthCookie = request.cookies().getFirst(OAUTH_COOKIE)
+        val handshakeValues = jwtManager.parseHandshakeToken(oauthCookie?.value, listOf("uniqueId", "redirectUrl"))
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find Cookie for handshake")
 
-            if (uniqueId != state.get()) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "State value not the same")
-            }
+        val uniqueId = handshakeValues["uniqueId"]
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "State value not the same")
+        val redirectTo = handshakeValues["redirectUrl"]
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Cookie did not contain redirect url")
 
-            val (name, email) = providerBackend.authenticate(code.get(), callbackUri, uniqueId)
+        val (name, email) = providerBackend.authenticate(code.get(), callbackUri, uniqueId)
 
-            val user = userManager.findUserDetails(email) ?: userManager.createUser(email, name)
-            val authToken = jwtManager.createUserToken(user)
+        val user = userManager.findUserDetails(email) ?: userManager.createUser(email, name)
+        val authToken = jwtManager.createUserToken(user)
 
-            val cookie = ResponseCookie.from(COOKIE_NAME, authToken)
-                    .path("/")
-                    .domain(cookieDomain)
-                    .build()
+        val cookie = ResponseCookie.from(COOKIE_NAME, authToken)
+                .path("/")
+                .domain(cookieDomain)
+                .build()
 
-            ServerResponse.temporaryRedirect(URI.create(redirectTo)).cookie(cookie).build()
-        }
+        return ServerResponse.temporaryRedirect(URI.create(redirectTo)).cookie(cookie).build()
     }
 
     companion object {

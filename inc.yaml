@@ -1,6 +1,7 @@
 exec:
   pull-deps:
-    commands: ./gradlew resolveDependencies
+    commands:
+      - ./gradlew resolveDependencies
 
   build:
     commands:
@@ -9,4 +10,10 @@ exec:
     description: Run a normal build
 
   package:
-    commands: ./gradlew copyDistForRelease
+    commands:
+      - ./gradlew copyDistForRelease
+
+  local-deploy:
+    commands:
+      - ./gradlew :webapp:installDist
+      - build/webapp/install/webapp/bin/webapp

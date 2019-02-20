@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.scheduling.annotation.SchedulingConfiguration
-import org.springframework.session.data.redis.config.annotation.web.server.EnableRedisWebSession
 import org.springframework.web.reactive.config.EnableWebFlux
 
 @Import(
@@ -17,5 +16,4 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @Configuration
 @EnableWebFlux
 @SpringBootApplication
-@EnableRedisWebSession
 open class ContainerConfiguration

@@ -10,4 +10,8 @@ interface JwtManager {
     fun createToken(tokenDetails: TokenManager.TokenDetails): String
 
     fun parseToken(token: String?): JwtTokenAuthentication?
+
+    fun createHandshakeToken(values: Map<String, String>): String
+
+    fun parseHandshakeToken(token: String?, keys: List<String>): Map<String, String>?
 }
