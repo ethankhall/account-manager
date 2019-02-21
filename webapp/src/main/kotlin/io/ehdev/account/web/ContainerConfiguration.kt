@@ -1,10 +1,16 @@
 package io.ehdev.account.web
 
 import io.ehdev.account.web.configuration.ApplicationRoutesConfiguration
+import io.micrometer.core.instrument.Clock
+import io.micrometer.core.instrument.util.HierarchicalNameMapper
+import io.micrometer.graphite.GraphiteConfig
+import io.micrometer.graphite.GraphiteMeterRegistry
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.core.env.Environment
 import org.springframework.scheduling.annotation.SchedulingConfiguration
 import org.springframework.web.reactive.config.EnableWebFlux
 
@@ -16,4 +22,14 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @Configuration
 @EnableWebFlux
 @SpringBootApplication
-open class ContainerConfiguration
+open class ContainerConfiguration {
+
+    @Bean
+    open fun graphiteMeterRegistry(config: GraphiteConfig, clock: Clock, env: Environment): GraphiteMeterRegistry {
+        val prefix = env.getProperty("metric.prefix", "account-manager")
+
+        return GraphiteMeterRegistry(
+                config, clock,
+                HierarchicalNameMapper { id, convention -> "$prefix." + HierarchicalNameMapper.DEFAULT.toHierarchicalName(id, convention) })
+    }
+}
