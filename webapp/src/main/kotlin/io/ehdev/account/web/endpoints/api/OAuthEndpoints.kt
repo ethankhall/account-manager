@@ -4,7 +4,7 @@ import io.ehdev.account.database.api.UserManager
 import io.ehdev.account.getLogger
 import io.ehdev.account.web.auth.jwt.JwtManager
 import io.ehdev.account.web.configuration.findScheme
-import io.ehdev.account.web.endpoints.api.internal.OAuthBackendHelper
+import io.ehdev.account.web.endpoints.api.internal.AbstractOauthHelper
 import io.ehdev.account.web.filters.HeaderConst.COOKIE_NAME
 import io.ehdev.account.web.filters.HeaderConst.OAUTH_COOKIE
 import org.apache.commons.lang3.RandomStringUtils
@@ -20,11 +20,11 @@ import java.net.URI
 import java.time.Duration
 
 class OAuthEndpoints(
-    private val providerMap: Map<String, OAuthBackendHelper>,
-    private val userManager: UserManager,
-    private val jwtManager: JwtManager,
-    private val cookieDomain: String,
-    private val baseUrl: String
+        private val providerMap: Map<String, AbstractOauthHelper>,
+        private val userManager: UserManager,
+        private val jwtManager: JwtManager,
+        private val cookieDomain: String,
+        private val baseUrl: String
 ) {
 
     private val log by getLogger()
@@ -44,14 +44,8 @@ class OAuthEndpoints(
         val token = jwtManager.createHandshakeToken(
                 mapOf("redirectUrl" to redirectValue, "uniqueId" to uniqueId))
 
-        val callbackUri = UriComponentsBuilder.fromUriString(baseUrl)
-                .replaceQuery(null)
-                .path("/oauth/$provider/callback")
-                .build()
-                .toUri()
-
-        log.debug("Redirecting to {}, the callback URL is {}", provider, callbackUri)
-        val redirectUri = providerBackend.buildRedirect(callbackUri, uniqueId)
+        log.debug("Redirecting to {}", provider)
+        val redirectUri = providerBackend.buildRedirect(uniqueId)
 
         val cookie = ResponseCookie.from(OAUTH_COOKIE, token)
                 .path("/")
@@ -74,23 +68,21 @@ class OAuthEndpoints(
         }
 
         val providerBackend = providerMap[provider.toLowerCase()] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-        val callbackUri = UriComponentsBuilder.fromUriString(baseUrl)
-                .replaceQuery(null)
-                .path("/oauth/$provider/callback")
-                .scheme(request.findScheme())
-                .build()
-                .toUri()
 
         val oauthCookie = request.cookies().getFirst(OAUTH_COOKIE)
         val handshakeValues = jwtManager.parseHandshakeToken(oauthCookie?.value, listOf("uniqueId", "redirectUrl"))
                 ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find Cookie for handshake")
 
         val uniqueId = handshakeValues["uniqueId"]
-                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "State value not the same")
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Cookie did not contain unique id url")
         val redirectTo = handshakeValues["redirectUrl"]
                 ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Cookie did not contain redirect url")
 
-        val (name, email) = providerBackend.authenticate(code.get(), callbackUri, uniqueId)
+        if (state.map { it != uniqueId }.orElse(false)) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong. Woops!")
+        }
+
+        val (name, email) = providerBackend.authenticate(code.get())
 
         val user = userManager.findUserDetails(email) ?: userManager.createUser(email, name)
         val authToken = jwtManager.createUserToken(user)

@@ -36,9 +36,9 @@ open class EndpointConfigs {
     ): OAuthEndpoints {
         val oauthConfigs = authConfig.oauthCreds.map {
             when (it.clientName.toLowerCase()) {
-                "github" -> GithubOAuthHelper(it.clientId, it.clientSecret, om)
-                "google" -> GoogleOAuthHelper(it.clientId, it.clientSecret, om)
-                "onelogin" -> OneLoginOAuthHelper(it.clientId, it.clientSecret, om)
+                "github" -> GithubOAuthHelper(it.clientId, it.clientSecret, om, authConfig.serviceBaseUrl)
+                "google" -> GoogleOAuthHelper(it.clientId, it.clientSecret, om, authConfig.serviceBaseUrl)
+                "onelogin" -> OneLoginOAuthHelper(it.clientId, it.clientSecret, om, authConfig.serviceBaseUrl)
                 else -> throw RuntimeException("Unknown OAuth provider ${it.clientName}")
             }
         }.associate {
