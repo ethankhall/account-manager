@@ -17,7 +17,7 @@
         <ul class="navbar-nav">
             <#list providers as provider>
             <li class="nav-item text-nowrap">
-                <a class="nav-link" href="/oauth/${provider}?redirectTo=${redirectTo}">Login with ${provider}</a>
+                <a class="nav-link" href="${baseUrl}/oauth/${provider}?redirectTo=${redirectTo}">Login with ${provider}</a>
             </li>
             </#list>
         </ul>

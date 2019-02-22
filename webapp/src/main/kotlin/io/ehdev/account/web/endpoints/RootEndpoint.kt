@@ -6,7 +6,7 @@ import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 
-class RootEndpoint(private val providers: List<String>) {
+class RootEndpoint(private val providers: List<String>, private val baseUrl: String) {
 
     fun getRoot(request: ServerRequest): Mono<ServerResponse> {
         val user = request.principal().block()
@@ -15,12 +15,12 @@ class RootEndpoint(private val providers: List<String>) {
             if (userResponse != null) {
                 val token = userResponse.authToken.replace(".", ".<wbr>")
                 return ServerResponse.ok().render("logged-in-index",
-                        mapOf("user" to userResponse.user, "token" to token))
+                        mapOf("user" to userResponse.user, "token" to token, "baseUrl" to baseUrl))
             }
         }
 
-        val redirectTo = request.queryParam("redirectTo").orElse("/")
+        val redirectTo = request.queryParam("redirectTo").orElse(baseUrl)
 
-        return ServerResponse.ok().render("not-logged-in-index", mapOf("providers" to providers, "redirectTo" to redirectTo))
+        return ServerResponse.ok().render("not-logged-in-index", mapOf("providers" to providers, "redirectTo" to redirectTo, "baseUrl" to baseUrl))
     }
 }

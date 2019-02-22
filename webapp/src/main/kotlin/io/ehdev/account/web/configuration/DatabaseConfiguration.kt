@@ -4,6 +4,7 @@ import io.ehdev.account.web.configuration.internal.JooqMetricsCollector
 import io.micrometer.core.instrument.MeterRegistry
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
+import org.jooq.conf.SettingsTools
 import org.jooq.impl.DSL
 import org.jooq.impl.DefaultConfiguration
 import org.springframework.context.annotation.Bean
@@ -19,6 +20,7 @@ open class DatabaseConfiguration {
         val configuration = DefaultConfiguration()
         configuration.setDataSource(dataSource)
         configuration.setSQLDialect(SQLDialect.MYSQL)
+        configuration.set(SettingsTools.defaultSettings().withRenderSchema(false).withRenderCatalog(false))
         configuration.set(JooqMetricsCollector(metrics, TimeUnit.SECONDS.toMillis(30)))
         return DSL.using(configuration)
     }

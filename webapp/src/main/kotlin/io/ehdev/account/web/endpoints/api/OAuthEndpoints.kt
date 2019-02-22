@@ -14,6 +14,7 @@ import org.springframework.http.ResponseCookie
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 import java.net.URI
 import java.time.Duration
@@ -22,7 +23,8 @@ class OAuthEndpoints(
     private val providerMap: Map<String, OAuthBackendHelper>,
     private val userManager: UserManager,
     private val jwtManager: JwtManager,
-    private val cookieDomain: String
+    private val cookieDomain: String,
+    private val baseUrl: String
 ) {
 
     private val log by getLogger()
@@ -31,22 +33,22 @@ class OAuthEndpoints(
         val provider = request.pathVariable("provider")
         val providerBackend = providerMap[provider.toLowerCase()] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         val redirectValue = request.queryParam(REDIRECT_NAME).orElseGet {
-            request.uriBuilder()
+            UriComponentsBuilder.fromUriString(baseUrl)
                     .replacePath("/api/v1/user")
                     .scheme(request.findScheme())
                     .build()
-                    .toString()
+                    .toUriString()
         }
 
         val uniqueId = RandomStringUtils.randomAlphanumeric(10)
         val token = jwtManager.createHandshakeToken(
                 mapOf("redirectUrl" to redirectValue, "uniqueId" to uniqueId))
 
-        val callbackUri = request.uriBuilder()
+        val callbackUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .replaceQuery(null)
-                .path("/callback")
-                .scheme(request.findScheme())
+                .path("/oauth/$provider/callback")
                 .build()
+                .toUri()
 
         log.debug("Redirecting to {}, the callback URL is {}", provider, callbackUri)
         val redirectUri = providerBackend.buildRedirect(callbackUri, uniqueId)
@@ -72,10 +74,12 @@ class OAuthEndpoints(
         }
 
         val providerBackend = providerMap[provider.toLowerCase()] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-        val callbackUri = request.uriBuilder()
-                .scheme(request.findScheme())
+        val callbackUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .replaceQuery(null)
+                .path("/oauth/$provider/callback")
+                .scheme(request.findScheme())
                 .build()
+                .toUri()
 
         val oauthCookie = request.cookies().getFirst(OAUTH_COOKIE)
         val handshakeValues = jwtManager.parseHandshakeToken(oauthCookie?.value, listOf("uniqueId", "redirectUrl"))

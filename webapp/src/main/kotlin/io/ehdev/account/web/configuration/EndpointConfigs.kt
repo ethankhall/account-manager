@@ -45,7 +45,7 @@ open class EndpointConfigs {
             it.pathProviderName() to it
         }
 
-        return OAuthEndpoints(oauthConfigs, userManager, jwtManager, authConfig.cookieDomain)
+        return OAuthEndpoints(oauthConfigs, userManager, jwtManager, authConfig.cookieDomain, authConfig.serviceBaseUrl)
     }
 
     @Bean
@@ -82,7 +82,9 @@ open class EndpointConfigs {
     open fun userEndpoint(): UserEndpoint = UserEndpoint()
 
     @Bean
-    open fun rootEndpoint(authConfig: ConfigAuthenticationModel): RootEndpoint = RootEndpoint(authConfig.oauthCreds.map { it.clientName.toLowerCase() })
+    open fun rootEndpoint(authConfig: ConfigAuthenticationModel): RootEndpoint {
+        return RootEndpoint(authConfig.oauthCreds.map { it.clientName.toLowerCase() }, authConfig.serviceBaseUrl)
+    }
 
     @Bean
     open fun endpointHelper(targetManager: TargetManager, accessManager: AccessManager): EndpointHelper {
