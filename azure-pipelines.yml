@@ -12,12 +12,14 @@ trigger:
       - version.properties
 steps:
   - script: |
+      set -e
       curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
       curl --location https://github.com/ethankhall/crom/releases/download/v0.1.5/crom-linux -o ~/crom
       chmod +x ~/inc ~/crom
     displayName: 'Prepare the machine'
 
   - script: |
+      set -e
       ~/crom update-version --pre-release release
       ~/inc exec build
       ~/inc exec package
@@ -37,6 +39,7 @@ steps:
       artifactName: artifacts
 
   - script: |
+      set -e
       ~/crom tag-version --source local,github --ignore-changes
       ~/crom upload-artifacts account-manager.zip=build/release-dir/account-manager.zip
       export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
