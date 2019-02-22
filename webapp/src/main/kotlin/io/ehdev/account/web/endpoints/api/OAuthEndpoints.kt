@@ -20,11 +20,11 @@ import java.net.URI
 import java.time.Duration
 
 class OAuthEndpoints(
-        private val providerMap: Map<String, AbstractOauthHelper>,
-        private val userManager: UserManager,
-        private val jwtManager: JwtManager,
-        private val cookieDomain: String,
-        private val baseUrl: String
+    private val providerMap: Map<String, AbstractOauthHelper>,
+    private val userManager: UserManager,
+    private val jwtManager: JwtManager,
+    private val cookieDomain: String,
+    private val baseUrl: String
 ) {
 
     private val log by getLogger()

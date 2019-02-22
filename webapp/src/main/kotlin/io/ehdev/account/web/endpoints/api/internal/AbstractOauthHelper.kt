@@ -46,7 +46,7 @@ abstract class AbstractOauthHelper(private val objectMapper: ObjectMapper, priva
         return parseUserDetails(bodyJson)
     }
 
-    fun callbackUri() : URI {
+    fun callbackUri(): URI {
         return UriComponentsBuilder.fromUriString(baseUrl)
                 .replaceQuery(null)
                 .path("/oauth/${pathProviderName()}/callback")

@@ -5,16 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.scribejava.apis.GitHubApi
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.oauth.OAuth20Service
-import io.ehdev.account.getLogger
-import java.net.URI
 
 class GithubOAuthHelper(
-        private val clientId: String,
-        private val clientSecret: String,
-        objectMapper: ObjectMapper,
-        baseUrl: String
+    private val clientId: String,
+    private val clientSecret: String,
+    objectMapper: ObjectMapper,
+    baseUrl: String
 ) : AbstractOauthHelper(objectMapper, baseUrl) {
-
 
     override fun parseUserDetails(tree: JsonNode): OAuthUserDetails {
         val name = tree["name"]
