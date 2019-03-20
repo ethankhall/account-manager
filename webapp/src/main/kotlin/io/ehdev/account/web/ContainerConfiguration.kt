@@ -2,9 +2,11 @@ package io.ehdev.account.web
 
 import io.ehdev.account.web.configuration.ApplicationRoutesConfiguration
 import io.micrometer.core.instrument.Clock
+import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.util.HierarchicalNameMapper
 import io.micrometer.graphite.GraphiteConfig
 import io.micrometer.graphite.GraphiteMeterRegistry
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -33,5 +35,10 @@ open class ContainerConfiguration {
         return GraphiteMeterRegistry(
                 config, clock,
                 HierarchicalNameMapper { id, convention -> "$prefix." + HierarchicalNameMapper.DEFAULT.toHierarchicalName(id, convention) })
+    }
+
+    @Bean
+    open fun metricsCommonTags(): MeterRegistryCustomizer<MeterRegistry> {
+        return MeterRegistryCustomizer { registry -> registry.config().commonTags("application", "account-manager") }
     }
 }
